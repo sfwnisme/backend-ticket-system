@@ -1,8 +1,9 @@
 const userRoles = {
-  ADMIN: "ADMIN",
-  MANAGER: "MANAGER",
-  CSR: "CSR",
-  VIEW_ONLY: "VIEW_ONLY",
+  ADMIN: "admin",
+  MANAGER: "manager",
+  CSR: "csr",
+  VIEW_ONLY: "view_only",
+  get DEFAULT() { return this.VIEW_ONLY }
 }
 
 module.exports = { userRoles }

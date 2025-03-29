@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true, unique: true, validate: [validator.isEmail, "must be a valid email"]
+    required: true,
+    unique: true,
+    validate: [validator.isEmail, "must be a valid email"]
   },
   password: {
     type: String,
@@ -17,10 +19,13 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: Object.values(userRoles), default: userRoles.VIEW_ONLY
+    enum: Object.values(userRoles),
+    default: userRoles.DEFAULT
   }
 },
-  { timestamps: true }
+  {
+    timestamps: true
+  }
 )
 
 module.exports = mongoose.model("User", userSchema)

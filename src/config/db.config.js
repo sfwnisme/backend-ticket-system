@@ -1,3 +1,7 @@
+// -------------------------------
+// database configuration
+// -------------------------------
+
 const mongoose = require('mongoose');
 
 const dbName = "ticket-system-db"
