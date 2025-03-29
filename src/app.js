@@ -38,7 +38,7 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-  console.log('🟥🟥🟥🟥🟥🟥🟥global error ', error)
+  console.log('🟥🟥🟥🟥🟥🟥🟥global error ', error.message)
   return res.status(error.statusCode || 500).json(
     response(
       error.statusCode || 500,

@@ -8,6 +8,8 @@ const AppError = require('../utils/appError.js')
 const asyncWrapper = require('../middlewares/asyncWrapper.js')
 const bcrypt = require('bcryptjs')
 const { validationResult, matchedData } = require('express-validator')
+const JWT = require('jsonwebtoken')
+const generateAuthResponse = require('../utils/generateAuthResponse.js')
 const appError = new AppError()
 
 const getAllUsers = asyncWrapper(
@@ -60,9 +62,10 @@ const register = asyncWrapper(
     const hashedPassword = await hashPassword(password)
     console.log('hashedPassword', hashedPassword)
 
-    const registereUser = new User({ name, email, password: hashedPassword, role: role || userRoles.DEFAULT })
-    await registereUser.save()
-    res.status(201).json(response(201, statusText.SUCCESS, 'the user created successfully', { name, email }))
+    const registeredUser = new User({ name, email, password: hashedPassword, role: role || userRoles.VIEW_ONLY })
+    await registeredUser.save()
+    const authUser = generateAuthResponse(registeredUser)
+    res.status(201).json(response(201, statusText.SUCCESS, 'the user created successfully', authUser))
   }
 )
 
@@ -75,21 +78,26 @@ const login = asyncWrapper(
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
     }
+    console.log(password)
 
-    const user = await User.findOne({ email }, { '__v': false })
-    const passwordIsMatch = await bcrypt.compare(password, user.password)
-    console.log('🟥password is match ', passwordIsMatch)
+    let user = await User.findOne({ email }, { "__v": false })
+    console.log('user password', user)
 
     if (!user) {
       appError.create(400, statusText.FAIL, 'user is not exist')
       return next(appError)
     }
 
+    const passwordIsMatch = await bcrypt.compare(password, user.password)
+    console.log('🟥password is match ', passwordIsMatch)
+
     if (user && !passwordIsMatch) {
       appError.create(401, statusText.FAIL, 'password is not correct')
       return next(appError)
     }
-    res.status(200).json(response(200, statusText.SUCCESS, 'operation success', user))
+
+    const authUser = generateAuthResponse(user)
+    res.status(200).json(response(200, statusText.SUCCESS, 'operation success', authUser))
   }
 )
 
@@ -97,7 +105,7 @@ const updateUser = asyncWrapper(
   async (req, res, next) => {
     const { body, params: { userId } } = req;
     const errors = validationResult(req)
-    
+
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)

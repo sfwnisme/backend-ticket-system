@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: Object.values(userRoles),
-    default: userRoles.DEFAULT
+    default: userRoles.VIEW_ONLY
   }
 },
   {

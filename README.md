@@ -8,7 +8,9 @@
 - [x] update user
 - [x] login
 - [x] user data validation
-- [ ] JWT > generate tokens > verify token > role-passed middleware
+- [x] JWT > generate tokens
+- [ ] JWT > verify token middleware
+- [ ] role-based middleware
 
 ## Common errors
 
@@ -27,5 +29,5 @@ TCP    [::]:5000          [::]:0        LISTENING     2924
 UDP    0.0.0.0:50001      *:*                         6808
 
 ## find the TCP port LISTENING number
-taskkill /PID <TCP port LISTENINT number> /F
+taskkill /PID <TCP port LISTENING number> /F
 ```
