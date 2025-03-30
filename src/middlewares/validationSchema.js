@@ -1,5 +1,5 @@
 const { body, param } = require("express-validator")
-const { userRoles } = require("../config/userRoles.config")
+const userRoles = require("../config/userRoles.config")
 
 const registerValidation = () => {
   return [

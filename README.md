@@ -1,5 +1,17 @@
 # Tasks
 
+## Upcoming sprints
+
+- [x] SPRINT 01: application and users setup
+- [ ] SPRINT 02: tickets
+- [ ] SPRINT 03: comments
+- [ ] SPRINT 04: departments
+- [ ] SPRINT 05: images
+- [ ] SPRINT 06: tags
+- [ ] SPRINT 07: logs
+
+### sprint 01: users API
+
 - [x] Jsend setup
 - [x] bcrypt setup
 - [x] httpStatusText setup
@@ -9,13 +21,17 @@
 - [x] login
 - [x] user data validation
 - [x] JWT > generate tokens
-- [ ] JWT > verify token middleware
-- [ ] role-based middleware
+- [x] JWT > verify token middleware
+- [x] role-based middleware
+
+
 
 ## Common errors
 
 error code: `node:events:498`
+
 cause: editing the validation schema on dev mode makes the conflict of the port in use
+
 solution: change the port number or kill its process
 kill process:
 

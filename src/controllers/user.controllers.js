@@ -8,14 +8,12 @@ const AppError = require('../utils/appError.js')
 const asyncWrapper = require('../middlewares/asyncWrapper.js')
 const bcrypt = require('bcryptjs')
 const { validationResult, matchedData } = require('express-validator')
-const JWT = require('jsonwebtoken')
 const generateAuthResponse = require('../utils/generateAuthResponse.js')
 const appError = new AppError()
 
 const getAllUsers = asyncWrapper(
   async (req, res) => {
-    const allUsers = await User.find({}, { '__v': false })
-    console.log('hi', allUsers)
+    const allUsers = await User.find({}, { '__v': false, 'password': false })
     res.status(200).json(
       response(
         200,
@@ -42,7 +40,6 @@ const register = asyncWrapper(
   async (req, res, next) => {
     const { name, email, password, role } = req.body
     const errors = validationResult(req);
-    console.log('=====================', errors)
 
     const user = await User.findOne({ email })
     if (user) {
@@ -53,14 +50,11 @@ const register = asyncWrapper(
 
     if (!errors.isEmpty()) {
       const data = matchedData(req)
-      console.log('============ matched data', data)
-      console.log('------------', errors.array())
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
     }
 
     const hashedPassword = await hashPassword(password)
-    console.log('hashedPassword', hashedPassword)
 
     const registeredUser = new User({ name, email, password: hashedPassword, role: role || userRoles.VIEW_ONLY })
     await registeredUser.save()
@@ -78,10 +72,8 @@ const login = asyncWrapper(
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
     }
-    console.log(password)
 
     let user = await User.findOne({ email }, { "__v": false })
-    console.log('user password', user)
 
     if (!user) {
       appError.create(400, statusText.FAIL, 'user is not exist')
@@ -89,7 +81,6 @@ const login = asyncWrapper(
     }
 
     const passwordIsMatch = await bcrypt.compare(password, user.password)
-    console.log('🟥password is match ', passwordIsMatch)
 
     if (user && !passwordIsMatch) {
       appError.create(401, statusText.FAIL, 'password is not correct')
@@ -125,7 +116,6 @@ const updateUser = asyncWrapper(
 
     const updatedUser = await User.updateOne({ _id: userId }, { ...updatedFields }, { runValidators: true })
     const isUpdated = updatedUser.modifiedCount > 0
-    console.log('is updated', updatedUser.modifiedCount === 0)
 
     // this condition does not working
     if (!isUpdated) {
@@ -154,7 +144,6 @@ const deleteUser = asyncWrapper(
 const deleteUsers = asyncWrapper(
   async (req, res) => {
     const { userIds } = req.body
-    console.log('user Id', userIds)
     if (userIds.length === 0 || !Array.isArray(userIds)) {
       res.status(401).json(response(401, statusText.FAIL, "no user ids exist"))
     }
