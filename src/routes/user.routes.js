@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const controllers = require('../controllers/user.controllers');
-const { query, body } = require('express-validator');
 const { registerValidation, loginValidation, updateUserValidation } = require('../middlewares/validationSchema');
 const verifyToken = require('../middlewares/verifyToken');
 const authorizedRole = require('../middlewares/authorizedRole');
 const userRoles = require('../config/userRoles.config')
 
-console.log('😅😅😅', ...Object.values(userRoles))
-
 router.route('/')
-  .get(verifyToken, authorizedRole(...Object.values(userRoles)), controllers.getAllUsers)
+  .get(controllers.getAllUsers)
   .delete(verifyToken, authorizedRole(userRoles.ADMIN), controllers.deleteUsers)
+
+router.route('/me')
+  .get(verifyToken, controllers.getCurrentUser)
 
 router.route('/register')
   .post(registerValidation(), controllers.register)

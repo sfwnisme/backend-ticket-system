@@ -5,7 +5,7 @@ const appError = new AppError()
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers['Authorization'] || req.headers['authorization']
-
+  console.log('hi')
   if (!authHeader) {
     appError.create(401, statusText.ERROR, 'token is required')
     return next(appError)
@@ -16,6 +16,8 @@ module.exports = (req, res, next) => {
 
     req.body.user = decoded
     console.log('token vefitied', decoded)
+    console.log('decoded===============', decoded)
+    // res.status(200).json(decoded)
     next()
   } catch (error) {
     console.log('verify token middleware error', error)

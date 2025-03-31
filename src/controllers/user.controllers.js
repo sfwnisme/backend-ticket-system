@@ -1,4 +1,4 @@
-const { userRoles } = require('../config/userRoles.config')
+const userRoles = require('../config/userRoles.config')
 const User = require('../models/user.model')
 const response = require('../utils/response')
 const statusText = require('../config/statusText.config.js')
@@ -9,6 +9,7 @@ const asyncWrapper = require('../middlewares/asyncWrapper.js')
 const bcrypt = require('bcryptjs')
 const { validationResult, matchedData } = require('express-validator')
 const generateAuthResponse = require('../utils/generateAuthResponse.js')
+const removeObjectKeys = require('../utils/removeObjectKeys.js')
 const appError = new AppError()
 
 const getAllUsers = asyncWrapper(
@@ -32,7 +33,19 @@ const getSingleUser = asyncWrapper(
       appError.create(400, statusText.FAIL, 'user is not exist')
       return next(appError)
     }
+    console.log('decoded+++++++++++', req.body.user)
     res.status(200).json(response(200, statusText.SUCCESS, "operation success", user))
+  }
+)
+
+const getCurrentUser = asyncWrapper(
+  async (req, res, next) => {
+    const currentUser = req.body.user
+    console.log(currentUser)
+
+    const user = removeObjectKeys(['iat', 'exp'], currentUser)
+    res.status(200).json(response(200, statusText.SUCCESS, 'success', user))
+    // next()
   }
 )
 
@@ -49,7 +62,6 @@ const register = asyncWrapper(
 
 
     if (!errors.isEmpty()) {
-      const data = matchedData(req)
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
     }
@@ -154,10 +166,11 @@ const deleteUsers = asyncWrapper(
 
 module.exports = {
   getAllUsers,
+  getSingleUser,
+  getCurrentUser,
   register,
   login,
   updateUser,
   deleteUser,
   deleteUsers,
-  getSingleUser
 }
