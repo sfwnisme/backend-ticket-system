@@ -2,7 +2,7 @@ const JWT = require('jsonwebtoken')
 const removeObjectKeys = require('./removeObjectKeys')
 
 module.exports = (user) => {
-  const returnedUserData = removeObjectKeys(['password', 'email'], user.toObject())
+  const returnedUserData = removeObjectKeys(['password'], user.toObject())
   const token = JWT.sign(returnedUserData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' })
   return {
     ...returnedUserData,
