@@ -20,16 +20,20 @@ app.use(cors());
 
 // import routes
 const userRoutes = require('./routes/user.routes');
-const response = require('./utils/response');
+const tagRoutes = require('./routes/tag.routes');
+
+// import response handlers
+const { formatApiResponse } = require('./utils/response');
 const statusText = require('./config/statusText.config');
 app.use('/api/users', userRoutes)
+app.use('/api/tags', tagRoutes)
 
 // -------------------------------
 // Error Handling
 // -------------------------------
 app.all('*', (req, res, next) => {
   res.status(404).json(
-    response(
+    formatApiResponse(
       404,
       statusText.ERROR,
       'page not found',
@@ -38,9 +42,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-  console.log('🟥🟥🟥🟥🟥🟥🟥global error ', error.message)
+  console.log('🟥global error ', error.message)
   return res.status(error.statusCode || 500).json(
-    response(
+    formatApiResponse(
       error.statusCode || 500,
       error.statusText,
       error.message,
