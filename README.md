@@ -3,14 +3,14 @@
 ## Upcoming sprints
 
 - [x] SPRINT 01: application and users setup
-- [ ] SPRINT 02: tickets
-- [ ] SPRINT 03: comments
-- [ ] SPRINT 04: departments
-- [ ] SPRINT 05: images
-- [ ] SPRINT 06: tags
+- [x] SPRINT 02: tags
+- [ ] SPRINT 03: tickets
+- [ ] SPRINT 04: comments
+- [ ] SPRINT 05: departments
+- [ ] SPRINT 06: images
 - [ ] SPRINT 07: logs
 
-### sprint 01: users API
+### sprint 01: users
 
 - [x] Jsend setup
 - [x] bcrypt setup
@@ -24,7 +24,17 @@
 - [x] JWT > verify token middleware
 - [x] role-based middleware
 
+### sprint 02: tags
 
+- [x] get all tags
+- [x] get single tag
+- [x] create tag
+- [x] update tag
+- [x] delete tag
+
+### BACKLOG
+
+- [ ] application error stack-trace npm
 
 ## Common errors
 
