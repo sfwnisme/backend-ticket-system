@@ -7,7 +7,7 @@ const authorizedRole = require('../middlewares/authorizedRole');
 const userRoles = require('../config/userRoles.config')
 
 router.route('/')
-  .get(controllers.getAllUsers)
+  .get(verifyToken, authorizedRole(...Object.values(userRoles)), controllers.getAllUsers)
   .delete(verifyToken, authorizedRole(userRoles.ADMIN), controllers.deleteUsers)
 
 router.route('/me')
