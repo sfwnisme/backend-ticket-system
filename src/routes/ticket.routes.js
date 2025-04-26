@@ -4,7 +4,7 @@ const controllers = require('../controllers/ticket.controllers');
 const verifyToken = require('../middlewares/verifyToken');
 const authorizedRole = require('../middlewares/authorizedRole');
 const userRoles = require('../config/userRoles.config');
-const { createTicketValidation, deleteTicketsValidation } = require('../middlewares/ticketValidationSchema');
+const { createTicketValidation, deleteTicketsValidation, singleTicketValidation } = require('../middlewares/ticketValidationSchema');
 
 router.route('/').get(
   verifyToken,
@@ -27,6 +27,7 @@ router.route('/create').post(
 router.route('/:ticketId').get(
   verifyToken,
   authorizedRole(userRoles.ADMIN, userRoles.MANAGER),
+  singleTicketValidation(),
   controllers.getSingleTicket
 ).patch(
   verifyToken,
@@ -35,6 +36,7 @@ router.route('/:ticketId').get(
 ).delete(
   verifyToken,
   authorizedRole(userRoles.ADMIN),
+  singleTicketValidation(),
   controllers.deleteTicket
 )
 
