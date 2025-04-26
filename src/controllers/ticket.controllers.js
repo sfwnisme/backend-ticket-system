@@ -23,12 +23,8 @@ const getSingleTicket = asyncWrapper(
   async (req, res, next) => {
     const { ticketId } = req.params
     const errors = validationResult(req)
-    const ticket = await Ticket.findOne({ _id: ticketId }, { '__v': false })
-    if (!ticket) {
-      appError.create(400, statusText.FAIL, "The requested ticket doesn't exist. Kindly try another one.")
-      return next(appError)
-    }
 
+    const ticket = await Ticket.findOne({ _id: ticketId }, { '__v': false })
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
@@ -59,12 +55,6 @@ const updateTicket = asyncWrapper(
   async (req, res, next) => {
     const { body, params: { ticketId } } = req;
     const errors = validationResult(req)
-    const ticket = await Ticket.findOne({ _id: ticketId });
-
-    if (!ticket) {
-      appError.create(404, statusText.FAIL, `Ticket [ ${ticketId} ] is not exist`)
-      return next(appError)
-    }
 
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
@@ -81,12 +71,6 @@ const deleteTicket = asyncWrapper(
   async (req, res, next) => {
     const { ticketId } = req.params
     const errors = validationResult(req)
-    const ticket = await Ticket.findOne({ _id: ticketId })
-    console.log(ticket)
-    if (!ticket) {
-      appError.create(404, statusText.FAIL, `Ticket [ ${ticketId} ] is not exist`)
-      return next(appError)
-    }
 
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
@@ -94,7 +78,7 @@ const deleteTicket = asyncWrapper(
     }
 
     const deletedTicket = await Ticket.deleteOne({ _id: ticketId })
-    return res.status(200).json(formatApiResponse(200, statusText.SUCCESS, 'delete successfully', deletedTicket))
+    return res.status(200).json(formatApiResponse(200, statusText.SUCCESS, 'ticket deleted successfully', deletedTicket))
   }
 )
 
