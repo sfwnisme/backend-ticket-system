@@ -6,7 +6,7 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-issu
 
 - [x] SPRINT 01: application and users setup
 - [x] SPRINT 02: tags
-- [ ] SPRINT 03: tickets
+- [x] SPRINT 03: tickets
 - [ ] SPRINT 04: comments
 - [ ] SPRINT 05: departments
 - [ ] SPRINT 06: images
@@ -37,11 +37,20 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-issu
 ### sprint 03: tickets
 
 - [x] get all tickets
-- [ ] get single ticket
+- [x] get single ticket
 - [x] create ticket
-- [ ] update ticket
-- [ ] delete ticket
+- [x] update ticket
+- [x] delete ticket
 - [x] delete tickets
+
+### sprint 04: comments
+
+- [ ] get all comments
+- [ ] get single comment
+- [ ] create comment
+- [ ] update comment
+- [ ] delete comment
+- [ ] delete comments
 
 ### BACKLOG
 
