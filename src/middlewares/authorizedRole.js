@@ -3,7 +3,7 @@ const AppError = require("../utils/appError")
 const appError = new AppError()
 
 module.exports = (...roles) => {
-  console.log('authorizedRole.js', roles)
+  // console.log('authorizedRole.js', roles)
   return (req, res, next) => {
     try {
       const { user } = req.body
