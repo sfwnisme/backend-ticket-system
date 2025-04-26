@@ -38,10 +38,10 @@ const ticketSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Tag'
   }],
-  // images: [{
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Image'
-  // }],
+  images: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
+  }],
   dueDate: {
     type: Date
   }
