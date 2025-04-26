@@ -1,4 +1,6 @@
-# Tasks
+# Ticket Syste
+
+You can follow the [frontend project](https://github.com/sfwnisme/ticketing-issue)
 
 ## Upcoming sprints
 
@@ -31,6 +33,15 @@
 - [x] create tag
 - [x] update tag
 - [x] delete tag
+
+### sprint 03: tickets
+
+- [x] get all tickets
+- [ ] get single ticket
+- [x] create ticket
+- [ ] update ticket
+- [ ] delete ticket
+- [x] delete tickets
 
 ### BACKLOG
 
