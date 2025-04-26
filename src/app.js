@@ -21,12 +21,14 @@ app.use(cors());
 // import routes
 const userRoutes = require('./routes/user.routes');
 const tagRoutes = require('./routes/tag.routes');
+const ticketRoutes = require('./routes/ticket.routes');
 
 // import response handlers
 const { formatApiResponse } = require('./utils/response');
 const statusText = require('./config/statusText.config');
 app.use('/api/users', userRoutes)
 app.use('/api/tags', tagRoutes)
+app.use('/api/tickets', ticketRoutes)
 
 // -------------------------------
 // Error Handling
