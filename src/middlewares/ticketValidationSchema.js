@@ -5,6 +5,41 @@ const Users = require("../models/user.model")
 const Tag = require("../models/tag.model")
 const { default: mongoose } = require("mongoose")
 
+function optionalField(fieldName, ...validations) {
+  return body(fieldName).optional(...validations)
+}
+
+async function notTicketFound(value) {
+  const res = await Ticket.findOne({ title: value })
+  if (res) {
+    throw new Error(`"${value}" {model} name is already taken, choose another one`)
+  }
+  return true
+}
+
+async function ticketFound(value) {
+  const res = await Ticket.findOne({ title: value })
+  if (res) {
+    throw new Error(`"${value}" ${value} name is already taken, choose another one`)
+  }
+  return true
+}
+
+const singleTicketValidation = () => {
+  return [
+    param('ticketId')
+      .isMongoId()
+      .withMessage((value) => `"${value}" Invalid ticket ID format`)
+      .custom(async (value) => {
+        const ticket = await Ticket.findOne({ _id: value })
+        if (!ticket) {
+          throw new Error("NOT_EXIST")
+        }
+        return true
+      })
+      .withMessage((value) => `"${value}" ticket is not exist`)
+  ]
+}
 const createTicketValidation = () => {
   return [
     body('title')
@@ -16,16 +51,16 @@ const createTicketValidation = () => {
         const ticket = await Ticket.findOne({ title: value })
         console.log('tickt=========', ticket)
         if (ticket) {
-          throw new Error(`"${value}" ticket name is already taken, chose another one`)
+          throw new Error(`"${value}" ticket name is already taken, choose another one`)
         }
         return true
       })
-      .withMessage((value) => `[ ${value} ] ticket name is already taken, chose another one`),
+      .withMessage((value) => `"${value}" ticket name is already taken, choose another one`),
     body('description')
       .notEmpty()
       .withMessage("description can not be empty")
       .isLength({ min: 15 })
-      .withMessage((value) => `[ ${value} ] ticket name length should contain 15 to 120 charachters`),
+      .withMessage((value) => `"${value}" ticket name length should contain 15 to 120 charachters`),
     body('status')
       .optional(),
     body('priority')
@@ -61,13 +96,51 @@ const createTicketValidation = () => {
   ]
 }
 
-const deleteTicketValidation = () => {
+const updateTicketValidation = () => {
   return [
-    param('ticketId')
-      .isMongoId()
-      .withMessage((value) => `[ ${value} ] Invalid ticket ID format`),
+    optionalField('title')
+      .isLength({ min: 15, max: 120 })
+      .withMessage((value) => `"${value}" ticket name length should contain 15 to 120 charachters`)
+      .custom(async (value) => {
+        const ticket = await Ticket.findOne({ title: value })
+        console.log('tickt=========', ticket)
+        if (ticket) {
+          throw new Error(`"${value}" ticket name is already taken, choose another one`)
+        }
+        return true
+      })
+      .withMessage((value) => `"${value}" ticket name is already taken, choose another one`),
+    optionalField('description')
+      .isLength({ min: 15 })
+      .withMessage((value) => `"${value}" ticket name length should contain 15 to 120 charachters`),
+    optionalField('status'),
+    optionalField('priority')
+      .isIn(Object.values(enumConfig.ticketPriority))
+      .withMessage((value) => `priority should be one of the following "${value}"`),
+    optionalField('createdBy'),
+    optionalField('assignedTo')
+      .custom(async (value) => {
+        const user = await Users.findOne({ _id: value })
+        if (!user) {
+          throw new Error('USER_NOT_EXIST')
+        }
+        return true
+      })
+      .withMessage((value) => `"${value}" user is not exist`),
+    optionalField('department'),
+    optionalField('tags')
+      .custom(async (value) => {
+        const tag = await Tag.findOne({ _id: value })
+        if (!tag) {
+          throw new Error('TAG_NOT_EXIST')
+        }
+        return true
+      })
+      .withMessage((value) => `"${value}" tag is not exist`),
+    optionalField('dueDate')
   ]
 }
+
 const deleteTicketsValidation = () => {
   return [
     body('ticketIds')
@@ -84,4 +157,4 @@ const deleteTicketsValidation = () => {
   ]
 }
 
-module.exports = { createTicketValidation, deleteTicketValidation, deleteTicketsValidation }
+module.exports = { singleTicketValidation, createTicketValidation, updateTicketValidation, deleteTicketsValidation }
