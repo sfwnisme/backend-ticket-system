@@ -1,6 +1,11 @@
 # Ticket Syste
 
-You can follow the [frontend project](https://github.com/sfwnisme/ticketing-issue)
+You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**issue**)
+
+## 🟥⚠️ Next Session
+
+- implement the tag validations for updateTicketValidation
+- implement the create and update comment validations
 
 ## Upcoming sprints
 
@@ -45,9 +50,10 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-issu
 
 ### sprint 04: comments
 
-- [ ] get all comments
+- [x] get all comments
+- [x] get all ticket's comment using query
 - [ ] get single comment
-- [ ] create comment
+- [x] create comment
 - [ ] update comment
 - [ ] delete comment
 - [ ] delete comments
@@ -58,7 +64,7 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-issu
 
 ## Common errors
 
-error code: `node:events:498`
+### error code: `node:events:498`
 
 cause: editing the validation schema on dev mode makes the conflict of the port in use
 
@@ -76,4 +82,32 @@ UDP    0.0.0.0:50001      *:*                         6808
 
 ## find the TCP port LISTENING number
 taskkill /PID <TCP port LISTENING number> /F
+```
+
+### Converting circular structure to JSON
+
+Sometimes you forget to add `await` before the Model request thus this issue happens, especially if the Model request have a populate
+
+**issue**:
+
+```js
+    const populatedComment = Comment.findById(comment._id)
+      .populate('ticket', '_id title')
+      .populate('author', '_id name')
+```
+
+**solution**: add await before the Model
+
+```js
+    const populatedComment = await Comment.findById(comment._id)
+      .populate('ticket', '_id title')
+      .populate('author', '_id name')
+```
+
+```bash
+Converting circular structure to JSON
+    --> starting at object with constructor 'MongoClient'
+    |     property 's' -> object with constructor 'Object'
+    |     property 'sessionPool' -> object with constructor 'ServerSessionPool'
+    --- property 'client' closes the circle
 ```
