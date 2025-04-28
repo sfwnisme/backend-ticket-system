@@ -34,14 +34,15 @@ const getSingleUser = asyncWrapper(
       appError.create(400, statusText.FAIL, "The requested user account doesn't exist. Kindly reach out to your administrator to create one.")
       return next(appError)
     }
-    console.log('decoded+++++++++++', req.body.user)
+    console.log('decoded+++++++++++', req.user)
     res.status(200).json(formatApiResponse(200, statusText.SUCCESS, "operation success", user))
   }
 )
 
 const getCurrentUser = asyncWrapper(
   async (req, res, next) => {
-    const currentUser = req.body.user
+    // const currentUser = req.body.user
+    const currentUser = req.user
     console.log(currentUser)
 
     const user = removeObjectKeys(['iat', 'exp'], currentUser)
@@ -71,7 +72,7 @@ const register = asyncWrapper(
 
     const registeredUser = new User({ name, email, password: hashedPassword, role: role || userRoles.VIEW_ONLY })
     await registeredUser.save()
-    const authUser = generateAuthformatApiResponse(registeredUser)
+    const authUser = generateAuthResponse(registeredUser)
     res.status(201).json(formatApiResponse(201, statusText.SUCCESS, 'the user created successfully', authUser))
   }
 )
