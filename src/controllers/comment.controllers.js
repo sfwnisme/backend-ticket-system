@@ -12,7 +12,9 @@ const COMMENT_POPULATE_CONFIG = [
   { path: 'ticket', select: '_id title' },
 ]
 
-const getAllComments = asyncWrapper(
+let commentController = module.exports
+
+commentController.getAllComments = asyncWrapper(
   async (req, res) => {
     const filter = req.query?.ticketId ? { ticket: req.query.ticketId } : {}
     const allComments = await Comment.find(filter, { '__v': false })
@@ -30,12 +32,12 @@ const getAllComments = asyncWrapper(
   }
 )
 
-const getSingleComment = asyncWrapper(
+commentController.getSingleComment = asyncWrapper(
   async (req, res, next) => {
     const { commentId } = req.params
     const errors = validationResult(req)
 
-    const comment = await Comment.findOne({ _id: commentId }, { '__v': false })
+    const comment = await Comment.findById(commentId, { '__v': false }).lean()
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
@@ -45,10 +47,10 @@ const getSingleComment = asyncWrapper(
   }
 )
 
-const createComment = asyncWrapper(
+commentController.createComment = asyncWrapper(
   async (req, res, next) => {
-    const { content, ticket, author, isSolution } = req.body
-    // const commentCreatedBy = req.body.user
+    const { content, ticket, isSolution } = req.body
+    const currentUser = req.user._id
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
@@ -57,7 +59,7 @@ const createComment = asyncWrapper(
     const comment = new Comment({
       content,
       ticket,
-      author,
+      author: currentUser,
       isSolution: isSolution || false
     })
     await comment.save()
@@ -75,9 +77,9 @@ const createComment = asyncWrapper(
 // get comments by ticket id
 
 
-const updateComment = asyncWrapper(
+commentController.updateComment = asyncWrapper(
   async (req, res, next) => {
-    const { body, params: { commentId } } = req;
+    const { body: { content, isSolution }, params: { commentId } } = req;
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
@@ -85,13 +87,14 @@ const updateComment = asyncWrapper(
       return next(appError)
     }
 
-    const updatedComment = await Comment.updateOne({ _id: commentId }, { ...body }, { runValidators: true })
-    res.status(200).json(formatApiResponse(200, statusText.SUCCESS, "operation success", updatedComment))
+    const updatedComment = await Comment.updateOne({ _id: commentId }, { content, isSolution }, { runValidators: true })
+    const populatedComment = await Comment.findById(commentId).populate(COMMENT_POPULATE_CONFIG).lean()
+    res.status(200).json(formatApiResponse(200, statusText.SUCCESS, "operation success", populatedComment))
   }
 )
 
 
-const deleteComment = asyncWrapper(
+commentController.deleteComment = asyncWrapper(
   async (req, res, next) => {
     const { commentId } = req.params
     const errors = validationResult(req)
@@ -101,12 +104,13 @@ const deleteComment = asyncWrapper(
       return next(appError)
     }
 
+    // const deletedComment = await Comment.findByIdAndDelete(commentId)
     const deletedComment = await Comment.deleteOne({ _id: commentId })
     return res.status(200).json(formatApiResponse(200, statusText.SUCCESS, 'comment deleted successfully', deletedComment))
   }
 )
 
-const deleteComments = asyncWrapper(
+commentController.deleteComments = asyncWrapper(
   async (req, res, next) => {
     const { commentIds } = req.body
     const errors = validationResult(req)
@@ -119,11 +123,11 @@ const deleteComments = asyncWrapper(
   }
 )
 
-module.exports = {
-  getAllComments,
-  getSingleComment,
-  createComment,
-  updateComment,
-  deleteComment,
-  deleteComments,
-}
+// module.exports = {
+//   getAllComments,
+//   getSingleComment,
+//   createComment,
+//   updateComment,
+//   deleteComment,
+//   deleteComments,
+// }
