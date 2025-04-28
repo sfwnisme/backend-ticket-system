@@ -14,10 +14,10 @@ module.exports = (req, res, next) => {
   try {
     const decoded = JWT.verify(token, process.env.JWT_SECRET_KEY)
 
-    req.body.user = decoded
+    // apply the user data from the token
+    req.user = decoded
     console.log('token vefitied', decoded)
     console.log('decoded===============', decoded)
-    // res.status(200).json(decoded)
     next()
   } catch (error) {
     console.log('verify token middleware error', error)
