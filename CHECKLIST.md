@@ -20,4 +20,4 @@
 ## Permissions
 
 - check current user id with the author id
-- check the  
+- check the

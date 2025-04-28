@@ -4,8 +4,7 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 
 ## 🟥⚠️ Next Session
 
-- implement the tag validations for updateTicketValidation
-- implement the create and update comment validations
+- departments routes
 
 ## Upcoming sprints
 
@@ -34,6 +33,7 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 ### sprint 02: tags
 
 - [x] get all tags
+- [ ] get all tags' tickets using query
 - [x] get single tag
 - [x] create tag
 - [x] update tag
@@ -52,11 +52,19 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 
 - [x] get all comments
 - [x] get all ticket's comment using query
-- [ ] get single comment
+- [x] get single comment
 - [x] create comment
-- [ ] update comment
-- [ ] delete comment
-- [ ] delete comments
+- [x] update comment
+- [x] delete comment
+
+- ### sprint 05: departments
+
+- [ ] get all departments
+- [ ] get all department tickets using query
+- [ ] get single department
+- [ ] create department
+- [ ] update department
+- [ ] delete department
 
 ### BACKLOG
 
