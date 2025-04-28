@@ -6,7 +6,8 @@ module.exports = (...roles) => {
   // console.log('authorizedRole.js', roles)
   return (req, res, next) => {
     try {
-      const { user } = req.body
+      // const user = req.body.user
+      const user = req.user
       if (!roles.includes(user.role)) {
         appError.create(403, statusText.ERROR, 'Forbedden, you can not access this route')
         return next(appError)
