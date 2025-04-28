@@ -4,7 +4,6 @@ const enumConfig = require("../config/enum.config")
 const Users = require("../models/user.model")
 const Tag = require("../models/tag.model")
 const { default: mongoose } = require("mongoose")
-// const { Mongoose } = require("mongoose")
 
 function optionalField(fieldName, ...validations) {
   return body(fieldName).optional(...validations)
@@ -26,7 +25,9 @@ async function ticketFound(value) {
   return true
 }
 
-const singleTicketValidation = () => {
+const ticketValidationSchema = module.exports
+
+ticketValidationSchema.singleTicketValidation = () => {
   return [
     param('ticketId')
       .isMongoId()
@@ -41,7 +42,7 @@ const singleTicketValidation = () => {
       .withMessage((value) => `"${value}" ticket is not exist`)
   ]
 }
-const createTicketValidation = () => {
+ticketValidationSchema.createTicketValidation = () => {
   return [
     body('title')
       .notEmpty()
@@ -87,6 +88,7 @@ const createTicketValidation = () => {
       .withMessage('Tags must provided as a non-empty array')
       .bail()
       .custom((tags) => {
+        // check invalid ID
         const invalidIds = tags.filter((tag) => !mongoose.Types.ObjectId.isValid(tag))
         if (invalidIds.length > 0) {
           throw new Error("NOT_VALID_ID: " + invalidIds.join(', '))
@@ -95,6 +97,7 @@ const createTicketValidation = () => {
       })
       .bail()
       .custom(async (tags = []) => {
+        // check existing tags
         const existingTags = await Tag.find({ _id: { $in: tags } }).select('_id').lean()
         console.log('existingTags', existingTags)
         const existingTagIds = existingTags.map((t) => t._id.toString()) // to array
@@ -104,13 +107,22 @@ const createTicketValidation = () => {
           throw new Error('TAG_NOT_EXIST: ' + missingTagIds.join(', '))
         }
         return true
+      })
+      .custom((tags = []) => {
+        // check duplicates
+        const uniqueTags = [...new Set(tags.map(tag => tag.toString()))];
+        if (uniqueTags.length !== tags.length) {
+          const duplicates = tags.filter((tag, index) => tags.indexOf(tag) !== index);
+          throw new Error('DUPLICATE_TAGS: ' + duplicates.join(', '));
+        }
+        return true;
       }),
     body('dueDate')
       .optional()
   ]
 }
 
-const updateTicketValidation = () => {
+ticketValidationSchema.updateTicketValidation = () => {
   return [
     optionalField('title')
       .isLength({ min: 15, max: 120 })
@@ -143,19 +155,44 @@ const updateTicketValidation = () => {
       .withMessage((value) => `"${value}" user is not exist`),
     optionalField('department'),
     optionalField('tags')
-      .custom(async (value) => {
-        const tag = await Tag.findOne({ _id: value })
-        if (!tag) {
-          throw new Error('TAG_NOT_EXIST')
+      .isArray({ min: 1 })
+      .withMessage('Tags must provided as a non-empty array')
+      .bail()
+      .custom((tags) => {
+        // check invalid ID
+        const invalidIds = tags.filter((tag) => !mongoose.Types.ObjectId.isValid(tag))
+        if (invalidIds.length > 0) {
+          throw new Error("NOT_VALID_ID: " + invalidIds.join(', '))
         }
         return true
       })
-      .withMessage((value) => `"${value}" tag is not exist`),
+      .bail()
+      .custom(async (tags = []) => {
+        // check existing tags
+        const existingTags = await Tag.find({ _id: { $in: tags } }).select('_id').lean()
+        console.log('existingTags', existingTags)
+        const existingTagIds = existingTags.map((t) => t._id.toString()) // to array
+        const missingTagIds = tags.filter((id) => !existingTagIds.includes(id))
+        console.log(missingTagIds)
+        if (missingTagIds.length > 0) {
+          throw new Error('TAG_NOT_EXIST: ' + missingTagIds.join(', '))
+        }
+        return true
+      })
+      .custom((tags = []) => {
+        // check duplicates
+        const uniqueTags = [...new Set(tags.map(tag => tag.toString()))];
+        if (uniqueTags.length !== tags.length) {
+          const duplicates = tags.filter((tag, index) => tags.indexOf(tag) !== index);
+          throw new Error('DUPLICATE_TAGS: ' + duplicates.join(', '));
+        }
+        return true;
+      }),
     optionalField('dueDate')
   ]
 }
 
-const deleteTicketsValidation = () => {
+ticketValidationSchema.deleteTicketsValidation = () => {
   return [
     body('ticketIds')
       .isArray({ min: 11 })
@@ -170,5 +207,3 @@ const deleteTicketsValidation = () => {
       .withMessage(`One or more ticket IDs is Invalid ID format`),
   ]
 }
-
-module.exports = { singleTicketValidation, createTicketValidation, updateTicketValidation, deleteTicketsValidation }
