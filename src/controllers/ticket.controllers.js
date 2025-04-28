@@ -32,7 +32,7 @@ const getSingleTicket = asyncWrapper(
     const errors = validationResult(req)
 
     const ticket = await Ticket.findOne({ _id: ticketId }, { '__v': false })
-      .populate(TICKET_POPULATE_CONFIG)
+      .populate(TICKET_POPULATE_CONFIG).lean()
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
@@ -45,14 +45,14 @@ const getSingleTicket = asyncWrapper(
 const createTicket = asyncWrapper(
   async (req, res, next) => {
     const { body } = req
-    const ticketCreatedBy = req.body.user
+    const currentUser = req.user
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       appError.create(400, statusText.FAIL, errors.array())
       return next(appError)
     }
 
-    const createdTicket = new Ticket({ ...body, createdBy: ticketCreatedBy._id })
+    const createdTicket = new Ticket({ ...body, createdBy: currentUser._id })
     await createdTicket.save()
     const populatedTicket = await Ticket.findById(createdTicket._id)
       .populate(TICKET_POPULATE_CONFIG)
