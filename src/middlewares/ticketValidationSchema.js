@@ -5,9 +5,9 @@ const Users = require("../models/user.model")
 const Tag = require("../models/tag.model")
 const { default: mongoose } = require("mongoose")
 
-function optionalField(fieldName, ...validations) {
-  return body(fieldName).optional(...validations)
-}
+// function optionalField(fieldName, ...validations) {
+//   return body(fieldName).optional(...validations)
+// }
 
 async function notTicketFound(value) {
   const res = await Ticket.findOne({ title: value })
@@ -83,7 +83,8 @@ ticketValidationSchema.createTicketValidation = () => {
       .withMessage((value) => `"${value}" user is not exist`),
     body('department')
       .optional() /* check then after creating deparment routes*/,
-    optionalField('tags')
+    body('tags')
+      .optional()
       .isArray({ min: 1 })
       .withMessage('Tags must provided as a non-empty array')
       .bail()
@@ -111,8 +112,10 @@ ticketValidationSchema.createTicketValidation = () => {
       .custom((tags = []) => {
         // check duplicates
         const uniqueTags = [...new Set(tags.map(tag => tag.toString()))];
+        console.log('tags', tags)
         if (uniqueTags.length !== tags.length) {
-          const duplicates = tags.filter((tag, index) => tags.indexOf(tag) !== index);
+          const duplicates = tags.filter((tag, index) => uniqueTags.indexOf(tag) !== index);
+          console.log("duplicates", duplicates)
           throw new Error('DUPLICATE_TAGS: ' + duplicates.join(', '));
         }
         return true;
@@ -124,7 +127,8 @@ ticketValidationSchema.createTicketValidation = () => {
 
 ticketValidationSchema.updateTicketValidation = () => {
   return [
-    optionalField('title')
+    body('title')
+      .optional()
       .isLength({ min: 15, max: 120 })
       .withMessage((value) => `"${value}" ticket name length should contain 15 to 120 charachters`)
       .custom(async (value) => {
@@ -136,15 +140,18 @@ ticketValidationSchema.updateTicketValidation = () => {
         return true
       })
       .withMessage((value) => `"${value}" ticket name is already taken, choose another one`),
-    optionalField('description')
+    body('description')
+      .optional()
       .isLength({ min: 15 })
       .withMessage((value) => `"${value}" ticket name length should contain 15 to 120 charachters`),
-    optionalField('status'),
-    optionalField('priority')
+    body('status').optional(),
+    body('priority')
+      .optional()
       .isIn(Object.values(enumConfig.ticketPriority))
       .withMessage((value) => `priority should be one of the following "${value}"`),
-    optionalField('createdBy'),
-    optionalField('assignedTo')
+    body('createdBy').optional(),
+    body('assignedTo')
+      .optional()
       .custom(async (value) => {
         const user = await Users.findOne({ _id: value })
         if (!user) {
@@ -153,8 +160,9 @@ ticketValidationSchema.updateTicketValidation = () => {
         return true
       })
       .withMessage((value) => `"${value}" user is not exist`),
-    optionalField('department'),
-    optionalField('tags')
+    body('department').optional(),
+    body('tags')
+      .optional()
       .isArray({ min: 1 })
       .withMessage('Tags must provided as a non-empty array')
       .bail()
@@ -188,7 +196,7 @@ ticketValidationSchema.updateTicketValidation = () => {
         }
         return true;
       }),
-    optionalField('dueDate')
+    body('dueDate').optional()
   ]
 }
 
