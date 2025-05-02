@@ -2,13 +2,13 @@
 
 ## Creating new model
 
-- Create model -> avoid setting unique field, do it in validation middleware
-- Create controllers
-- Create routes
-- Apply controllers to ruotes
-- Create validations -> all uniqe data set here
+- `src/models/name.models.js` Create model -> avoid setting unique field, do it in validation middleware
+- `src/controllers/name.controllers.js` Create controllers
+- `src/routes/name.routes.js` Create routes
+- Apply controllers to routes
+- `src/validations/nameValidations.js` Create validations -> all unique data set here
 - Apply validations to routes
-- Apply the routes in the index file
+- `src/app.js` Apply the routes in the index file
 
 ## Create validations
 

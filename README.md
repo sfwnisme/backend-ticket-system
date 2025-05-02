@@ -1,5 +1,7 @@
 # Ticket Syste
 
+>**Progress** **[60%]**
+
 You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**issue**)
 
 ## 🟥⚠️ Next Session
@@ -11,8 +13,8 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 - [x] SPRINT 01: application and users setup
 - [x] SPRINT 02: tags
 - [x] SPRINT 03: tickets
-- [ ] SPRINT 04: comments
-- [ ] SPRINT 05: departments
+- [x] SPRINT 04: comments
+- [x] SPRINT 05: departments
 - [ ] SPRINT 06: images
 - [ ] SPRINT 07: logs
 
@@ -29,11 +31,12 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 - [x] JWT > generate tokens
 - [x] JWT > verify token middleware
 - [x] role-based middleware
+- [ ] get all user's tickets, comments, history
 
 ### sprint 02: tags
 
 - [x] get all tags
-- [ ] get all tags' tickets using query
+- [ ] get all tag's tickets using query
 - [x] get single tag
 - [x] create tag
 - [x] update tag
@@ -51,7 +54,7 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 ### sprint 04: comments
 
 - [x] get all comments
-- [x] get all ticket's comment using query
+- [x] get all ticket's comments using query
 - [x] get single comment
 - [x] create comment
 - [x] update comment
@@ -59,12 +62,14 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 
 - ### sprint 05: departments
 
-- [ ] get all departments
-- [ ] get all department tickets using query
-- [ ] get single department
-- [ ] create department
-- [ ] update department
-- [ ] delete department
+- [x] get all departments
+- [ ] get all department's tickets using query
+- [x] get single department
+- [x] create department
+- [x] update department
+- [x] delete department
+- [ ] add user to department
+- [ ] add ticket to department
 
 ### BACKLOG
 
