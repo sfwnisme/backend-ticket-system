@@ -22,6 +22,7 @@ app.use(cors());
 const userRoutes = require('./routes/user.routes');
 const ticketRoutes = require('./routes/ticket.routes');
 const commentRoutes = require('./routes/comment.routes');
+const departmentRoutes = require('./routes/department.routes');
 const tagRoutes = require('./routes/tag.routes');
 
 // import response handlers
@@ -30,6 +31,7 @@ const statusText = require('./config/statusText.config');
 app.use('/api/users', userRoutes)
 app.use('/api/tickets', ticketRoutes)
 app.use('/api/comments', commentRoutes)
+app.use('/api/departments', departmentRoutes)
 app.use('/api/tags', tagRoutes)
 
 // -------------------------------
