@@ -6,15 +6,19 @@ const asyncWrapper = require('../middlewares/asyncWrapper.js')
 const { validationResult } = require('express-validator')
 const appError = new AppError()
 
+const ticketControllers = module.exports
+
 const TICKET_POPULATE_CONFIG = [
   { path: 'createdBy', select: '_id name' },
   { path: 'tags', select: '_id name' },
   { path: 'createdBy', select: '_id name' },
 ]
 
-const getAllTickets = asyncWrapper(
+ticketControllers.getAllTickets = asyncWrapper(
   async (req, res) => {
-    const allTickets = await Ticket.find({}, { '__v': false })
+    const { departmentId } = req.query
+    const filter = departmentId ? { department: departmentId } : {}
+    const allTickets = await Ticket.find(filter, { '__v': false })
       .populate(TICKET_POPULATE_CONFIG).lean()
     res.status(200).json(
       formatApiResponse(
@@ -26,7 +30,7 @@ const getAllTickets = asyncWrapper(
   }
 )
 
-const getSingleTicket = asyncWrapper(
+ticketControllers.getSingleTicket = asyncWrapper(
   async (req, res, next) => {
     const { ticketId } = req.params
     const errors = validationResult(req)
@@ -42,7 +46,7 @@ const getSingleTicket = asyncWrapper(
   }
 )
 
-const createTicket = asyncWrapper(
+ticketControllers.createTicket = asyncWrapper(
   async (req, res, next) => {
     const { body } = req
     const currentUser = req.user
@@ -62,7 +66,7 @@ const createTicket = asyncWrapper(
 )
 
 
-const updateTicket = asyncWrapper(
+ticketControllers.updateTicket = asyncWrapper(
   async (req, res, next) => {
     const { body, params: { ticketId } } = req;
     const errors = validationResult(req)
@@ -79,7 +83,7 @@ const updateTicket = asyncWrapper(
 )
 
 
-const deleteTicket = asyncWrapper(
+ticketControllers.deleteTicket = asyncWrapper(
   async (req, res, next) => {
     const { ticketId } = req.params
     const errors = validationResult(req)
@@ -94,7 +98,7 @@ const deleteTicket = asyncWrapper(
   }
 )
 
-const deleteTickets = asyncWrapper(
+ticketControllers.deleteTickets = asyncWrapper(
   async (req, res, next) => {
     const { ticketIds } = req.body
     const errors = validationResult(req)
@@ -107,11 +111,11 @@ const deleteTickets = asyncWrapper(
   }
 )
 
-module.exports = {
-  getAllTickets,
-  getSingleTicket,
-  createTicket,
-  updateTicket,
-  deleteTicket,
-  deleteTickets,
-}
+// module.exports = {
+//   getAllTickets,
+//   getSingleTicket,
+//   createTicket,
+//   updateTicket,
+//   deleteTicket,
+//   deleteTickets,
+// }
