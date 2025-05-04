@@ -20,8 +20,6 @@ commentController.getAllComments = asyncWrapper(
     const allComments = await Comment.find(filter, { '__v': false })
       .populate(COMMENT_POPULATE_CONFIG)
 
-
-
     res.status(200).json(
       formatApiResponse(
         200,
