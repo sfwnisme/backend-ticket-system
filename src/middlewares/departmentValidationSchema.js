@@ -11,7 +11,7 @@ departmentValidationSchema.createDepartmentValidation = () => {
 			.notEmpty()
 			.withMessage("EMPTY_INPUT: department can not be emtpy")
 			.isLength({ min: 5 })
-			.withMessage((value) => `TOO_SHORT:"${value}" department title must be lest than 5 characters`,)
+			.withMessage((value) => `TOO_SHORT:"${value}" department title must be lest than 5 characters`)
 			.custom(async (value) => await checkTakenDoc(value, Department, 'title', 'department')),
 		optionalField("descriptoin")
 			.isLength({ min: 20, max: 300 })
@@ -41,7 +41,7 @@ departmentValidationSchema.updateDepartmentValidation = () => {
 			.notEmpty()
 			.withMessage("EMPTY_INPUT: department can not be emtpy")
 			.isLength({ min: 5 })
-			.withMessage((value) => `TOO_SHORT:"${value}" department title must be lest than 5 characters`,)
+			.withMessage((value) => `TOO_SHORT:"${value}" department title must be lest than 5 characters`)
 			.custom(async (value) => await checkTakenDoc(value, Department, 'title', 'department')),
 		optionalField("descriptoin")
 			.isLength({ min: 20, max: 300 })
