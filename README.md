@@ -36,7 +36,6 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 ### sprint 02: tags
 
 - [x] get all tags
-- [ ] get all tag's tickets using query
 - [x] get single tag
 - [x] create tag
 - [x] update tag
@@ -45,6 +44,8 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 ### sprint 03: tickets
 
 - [x] get all tickets
+- [x] get tickets by department ID using query
+- [ ] get tickets by tag ID using query
 - [x] get single ticket
 - [x] create ticket
 - [x] update ticket
@@ -63,7 +64,6 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 - ### sprint 05: departments
 
 - [x] get all departments
-- [ ] get all department's tickets using query
 - [x] get single department
 - [x] create department
 - [x] update department
