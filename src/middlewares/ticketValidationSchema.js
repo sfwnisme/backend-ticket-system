@@ -203,15 +203,21 @@ ticketValidationSchema.updateTicketValidation = () => {
 ticketValidationSchema.deleteTicketsValidation = () => {
   return [
     body('ticketIds')
-      .isArray({ min: 11 })
+      .isArray({ min: 1 })
       .withMessage('Must provide an array with ticket ID')
       .custom((value) => {
         const invalidObjectId = value.filter(id => !mongoose.Types.ObjectId.isValid(id))
         if (invalidObjectId.length > 0) {
-          throw new Error('INVALID_TICKET_ID')
+          throw new Error('INVALID_TICKET_ID: One or more ticket IDs is Invalid ID format')
         }
         return true
       })
-      .withMessage(`One or more ticket IDs is Invalid ID format`),
+      .custom(async (value = []) => {
+        const tickets = await Ticket.find({ _id: { $in: value } }).lean()
+        if (!tickets) {
+          throw new Error('NOT_FOUND: tickets')
+        }
+        return true
+      })
   ]
 }
