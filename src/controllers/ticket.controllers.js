@@ -10,14 +10,17 @@ const ticketControllers = module.exports
 
 const TICKET_POPULATE_CONFIG = [
   { path: 'createdBy', select: '_id name' },
-  { path: 'tags', select: '_id name' },
-  { path: 'createdBy', select: '_id name' },
+  { path: 'tags', select: '_id name color' },
+  { path: 'department', select: '_id title' },
 ]
 
 ticketControllers.getAllTickets = asyncWrapper(
   async (req, res) => {
-    const { departmentId } = req.query
-    const filter = departmentId ? { department: departmentId } : {}
+    const { departmentId, status, priority } = req.query
+    let filter = {}
+    if (departmentId) filter.department = departmentId
+    if (status) filter.status = status
+    if (priority) filter.priority = priority
     const allTickets = await Ticket.find(filter, { '__v': false })
       .populate(TICKET_POPULATE_CONFIG).lean()
     res.status(200).json(
