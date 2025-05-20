@@ -7,14 +7,12 @@ const { validationResult } = require("express-validator");
 const Ticket = require("../models/ticket.model.js");
 const appError = new AppError();
 
-const DEPARTMENT_POPULATE_CONFIG = [{ path: "tickets", select: "_id title" }];
 
 let departmentController = module.exports;
 
 departmentController.getAllDepartments = asyncWrapper(async (req, res) => {
-  // const filter = req.query?.ticketId ? { ticket: req.query.ticketId } : {}
   const allDepartments = await Department.find({}, { __v: false })
-    .populate(DEPARTMENT_POPULATE_CONFIG)
+  console.log(allDepartments)
   res
     .status(200)
     .json(
@@ -78,8 +76,6 @@ departmentController.createDepartment = asyncWrapper(async (req, res, next) => {
     );
 });
 
-// get departments by ticket id
-
 departmentController.updateDepartment = asyncWrapper(async (req, res, next) => {
   const {
     body,
@@ -132,9 +128,6 @@ departmentController.deleteDepartment = asyncWrapper(async (req, res, next) => {
       ),
     );
 });
-
-
-// side controllers
 
 departmentController.addTicketToDepartment = asyncWrapper(
   async (req, res, next) => {
