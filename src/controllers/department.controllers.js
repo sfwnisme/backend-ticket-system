@@ -92,9 +92,8 @@ departmentController.updateDepartment = asyncWrapper(async (req, res, next) => {
     { _id: departmentId },
     { ...body },
   );
-  const populatedDepartment = await Department.findById(departmentId)
-    .populate(DEPARTMENT_POPULATE_CONFIG)
-    .lean();
+  const department = await Department.findById(departmentId).lean();
+  //   .populate(DEPARTMENT_POPULATE_CONFIG)
   res
     .status(200)
     .json(
@@ -102,7 +101,7 @@ departmentController.updateDepartment = asyncWrapper(async (req, res, next) => {
         200,
         statusText.SUCCESS,
         "operation success",
-        populatedDepartment,
+        department,
       ),
     );
 });
