@@ -6,7 +6,7 @@ You can follow the [frontend project](https://github.com/sfwnisme/ticketing-**is
 
 ## 🟥⚠️ Next Session
 
-- departments routes
+- [x] when delete ticket delete its comments
 
 ## Upcoming sprints
 
