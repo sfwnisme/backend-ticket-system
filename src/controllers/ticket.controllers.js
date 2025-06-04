@@ -10,6 +10,7 @@ const ticketControllers = module.exports
 
 const TICKET_POPULATE_CONFIG = [
   { path: 'createdBy', select: '_id name' },
+  { path: 'assignedTo', select: '_id name' },
   { path: 'tags', select: '_id name color' },
   { path: 'department', select: '_id title' },
 ]
