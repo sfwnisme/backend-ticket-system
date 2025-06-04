@@ -1,4 +1,5 @@
 const Ticket = require('../models/ticket.model')
+const Comment = require('../models/comment.model')
 const { formatApiResponse } = require('../utils/response');
 const statusText = require('../config/statusText.config.js')
 const AppError = require('../utils/appError.js')
@@ -98,6 +99,7 @@ ticketControllers.deleteTicket = asyncWrapper(
     }
 
     const deletedTicket = await Ticket.deleteOne({ _id: ticketId })
+    const deleteTicketComments = await Comment.deleteMany({ ticket: ticketId })
     return res.status(200).json(formatApiResponse(200, statusText.SUCCESS, 'ticket deleted successfully', deletedTicket))
   }
 )
