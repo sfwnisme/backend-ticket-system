@@ -5,6 +5,7 @@ const AppError = require('../utils/appError.js')
 const asyncWrapper = require('../middlewares/asyncWrapper.js')
 const { validationResult } = require('express-validator');
 const Ticket = require('../models/ticket.model.js');
+const enumConfig = require('../config/enum.config.js');
 const appError = new AppError()
 
 const COMMENT_POPULATE_CONFIG = [
@@ -64,6 +65,13 @@ commentController.createComment = asyncWrapper(
 
     // update ticket to align with comments time creation
     await Ticket.findByIdAndUpdate(comment.ticket, { updatedAt: Date.now() })
+    await Ticket.findByIdAndUpdate(comment.ticket,
+      { $set: { status:  enumConfig.ticketStatus.IN_PROGRESS } },
+      {
+        $currentDate: { updateAt: true },
+        where: { status: enumConfig.ticketStatus.OPEN }
+      }
+    )
 
     const populatedComment = await Comment.findById(comment._id)
       .populate(COMMENT_POPULATE_CONFIG).lean()
