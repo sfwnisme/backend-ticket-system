@@ -59,10 +59,11 @@ departmentController.createDepartment = asyncWrapper(async (req, res, next) => {
   const department = new Department(body);
   await department.save();
 
-  await Ticket.updateMany(department.tickets, { updatedAt: Date.now() });
+  // await Ticket.updateMany(department.tickets, { updatedAt: Date.now() });
 
   const populatedDepartment = await Department.findById(department._id)
-    .populate(DEPARTMENT_POPULATE_CONFIG).lean()
+    .lean()
+    // .populate(DEPARTMENT_POPULATE_CONFIG)
 
   res
     .status(201)
