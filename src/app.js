@@ -15,7 +15,10 @@ connectDB()
 
 // Middlewares
 app.use(express.json());// parses JSON requests
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 
 
 // import routes
