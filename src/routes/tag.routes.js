@@ -6,14 +6,34 @@ const verifyToken = require('../middlewares/verifyToken');
 const authorizedRole = require('../middlewares/authorizedRole');
 const userRoles = require('../config/userRoles.config')
 
+router.use(verifyToken)
+
 router.route('/')
-  .get(verifyToken, authorizedRole(userRoles.ADMIN, userRoles.MANAGER), controllers.getAllTags)
+  .get(
+    authorizedRole(...Object.values(userRoles)),
+    controllers.getAllTags
+  )
 router.route('/create')
-  .post(createTagValidation(), controllers.createTag)
+  .post(
+    authorizedRole(userRoles.ADMIN, userRoles.MANAGER, userRoles.CSR),
+    createTagValidation(),
+    controllers.createTag
+  )
 
 router.route('/:tagId')
-  .get(verifyToken, authorizedRole(userRoles.ADMIN, userRoles.MANAGER), controllers.getSingleTag)
-  .patch(verifyToken, authorizedRole(userRoles.ADMIN, userRoles.MANAGER), updateTagValidation(), controllers.updateTag)
-  .delete(verifyToken, authorizedRole(userRoles.ADMIN), deleteTagValidation(), controllers.deleteTag)
+  .get(
+    authorizedRole(...Object.values(userRoles)),
+    controllers.getSingleTag
+  )
+  .patch(
+    authorizedRole(userRoles.ADMIN, userRoles.MANAGER, userRoles.CSR),
+    updateTagValidation(),
+    controllers.updateTag
+  )
+  .delete(
+    authorizedRole(userRoles.ADMIN, userRoles.MANAGER, userRoles.CSR),
+    deleteTagValidation(),
+    controllers.deleteTag
+  )
 
 module.exports = router

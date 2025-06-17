@@ -9,14 +9,33 @@ const userRoles = require('../config/userRoles.config')
 router.use(verifyToken)
 
 router.route('/')
-  .get(authorizedRole(...Object.values(userRoles)), controllers.getAllDepartments)
+  .get(
+    authorizedRole(...Object.values(userRoles)),
+    controllers.getAllDepartments
+  )
 
 router.route('/create')
-  .post(createDepartmentValidation(), controllers.createDepartment)
+  .post(
+    authorizedRole(userRoles.ADMIN, userRoles.MANAGER),
+    createDepartmentValidation(),
+    controllers.createDepartment
+  )
 
 router.route('/:departmentId')
-  .get(authorizedRole(...Object.values(userRoles)), singleDepartmentValidation(), controllers.getSingleDepartment)
-  .patch(authorizedRole(userRoles.ADMIN, userRoles.MANAGER, userRoles.CSR), updateDepartmentValidation(), controllers.updateDepartment)
-  .delete(authorizedRole(userRoles.ADMIN), singleDepartmentValidation(), controllers.deleteDepartment)
+  .get(
+    authorizedRole(...Object.values(userRoles)),
+    singleDepartmentValidation(),
+    controllers.getSingleDepartment
+  )
+  .patch(
+    authorizedRole(userRoles.ADMIN, userRoles.MANAGER, userRoles.CSR),
+    updateDepartmentValidation(),
+    controllers.updateDepartment
+  )
+  .delete(
+    authorizedRole(userRoles.ADMIN),
+    singleDepartmentValidation(),
+    controllers.deleteDepartment
+  )
 
 module.exports = router

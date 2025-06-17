@@ -9,26 +9,26 @@ const { createTicketValidation, deleteTicketsValidation, singleTicketValidation,
 router.use(verifyToken)
 
 router.route('/').get(
-  authorizedRole(userRoles.ADMIN, userRoles.MANAGER),
+  authorizedRole(...Object.values(userRoles)),
   controllers.getAllTickets
 ).delete(
-  authorizedRole(userRoles.ADMIN, userRoles.MANAGER),
+  authorizedRole(userRoles.ADMIN),
   deleteTicketsValidation(),
   controllers.deleteTickets
 )
 
 router.route('/create').post(
-  authorizedRole(userRoles.ADMIN, userRoles.MANAGER),
+  authorizedRole(userRoles.ADMIN, userRoles.MANAGER, userRoles.CSR),
   createTicketValidation(),
   controllers.createTicket
 )
 
 router.route('/:ticketId').get(
-  authorizedRole(userRoles.ADMIN, userRoles.MANAGER),
+  authorizedRole(...Object.values(userRoles)),
   singleTicketValidation(),
   controllers.getSingleTicket
 ).patch(
-  authorizedRole(userRoles.ADMIN, userRoles.MANAGER),
+  authorizedRole(userRoles.ADMIN, userRoles.MANAGER, userRoles.CSR),
   updateTicketValidation(),
   controllers.updateTicket
 ).delete(
