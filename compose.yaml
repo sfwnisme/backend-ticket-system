@@ -1,0 +1,21 @@
+
+services:
+  server:
+    build:
+      context: .
+    environment:
+      # NODE_ENV: production
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      MONGO_URI: ${MONGO_URI}
+      PORT: ${PORT}
+    ports:
+      - 8000:8000
+    develop: 
+      watch: 
+        - path: ./package.json
+          action: rebuild
+        - path: ./package-lock.json
+          action: rebuild
+        - path: .
+          target: /src 
+          action: sync
